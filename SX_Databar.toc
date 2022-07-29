@@ -3,7 +3,6 @@
 ## Author: |cff00FF99Saxitoxin
 ## Notes: Adds a bottombar by the request of |cffffffffu/sammojo|r on Reddit, Icons made by |cffffffffu/sammojo|r
 ## SavedVariables: TEST_CONFIG
-##
 
 settings.lua
 
