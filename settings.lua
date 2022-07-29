@@ -92,9 +92,9 @@ cfg.heartstone = {
 	showTooltip = true,		-- SHOWS THE COOLDOWN ON MOUSEOVER
 }
 
-cfg.tooltipTitleColor = "ff6699"
+cfg.tooltipTitleColor = "b1001d"
 cfg.TooltipTitleText = function (text)
-	return "[|c".. cfg.tooltipTitleColor .."FF".. text .."|r]"
+	return "|cFF".. cfg.tooltipTitleColor .. text .."|r"
 end
 
 cfg.useConfig = false		-- !! DO NOT TOUCH !!

@@ -6,17 +6,6 @@ if not cfg.micromenu.show then return end
 ---------------------------------------------
 -- GAME MENU
 ---------------------------------------------
-
-PlayerFrame.name:SetFont("Interface\\AddOns\\oUF_Drk\\media\\BigNoodleTitling.ttf", 11, "THINOUTLINE")
-TargetFrame.name:SetFont("Interface\\AddOns\\oUF_Drk\\media\\BigNoodleTitling.ttf", 11, "THINOUTLINE")
-
-local isBeautiful = IsAddOnLoaded("Blizzard_RaidUI") --!Beautycase check
-
-if isBeautiful then
-	subframes.name:SetFont("Interface\\AddOns\\oUF_Drk\\media\\BigNoodleTitling.ttf",11,"THINOUTLINE")
-end
-
-
 local gameMenuFrame = CreateFrame("BUTTON",nil, cfg.SXframe)
 gameMenuFrame:SetSize(32, 32)
 gameMenuFrame:SetPoint("LEFT",4,0)
@@ -31,29 +20,26 @@ gameMenuFrame:SetScript("OnEnter", function()
 	if InCombatLockdown() then return end
 	gameMenuIcon:SetVertexColor(unpack(cfg.color.hover))
 	GameTooltip:SetOwner(gameMenuFrame, cfg.tooltipPos)
-	GameTooltip:AddLine("[|cff6699FFМеню|r]")
-	GameTooltip:AddDoubleLine("<Left-click>", "Open Menu")
-	GameTooltip:AddDoubleLine("<Right-click + SHIFT>", "Reload UI")
+	GameTooltip:AddLine(cfg.TooltipTitleText("Меню"))
+	GameTooltip:AddLine(" ")
+	GameTooltip:AddDoubleLine("<ЛКМ>", "Открыть меню", 1, 1, 1, 1, 1, 0)
+	GameTooltip:AddDoubleLine("<СКМ>", "Перезагрузить UI", 1, 1, 1, 1, 1, 0)
 	GameTooltip:Show()
 end)
 
-gameMenuFrame:SetScript("OnLeave", function() if ( GameTooltip:IsShown() ) then GameTooltip:Hide() end gameMenuIcon:SetVertexColor(unpack(cfg.color.normal)) end)
+gameMenuFrame:SetScript("OnLeave", function() 
+	if ( GameTooltip:IsShown() ) then 
+		GameTooltip:Hide() 
+	end 
+	gameMenuIcon:SetVertexColor(unpack(cfg.color.normal)) 
+end)
 
 gameMenuFrame:SetScript("OnClick", function(self, button, down)
 	if InCombatLockdown() then return end
 	if button == "LeftButton" then 
 		ToggleFrame(GameMenuFrame)
-	elseif button == "RightButton" then 
-		if IsShiftKeyDown() then ReloadUI()
-		elseif IsAltKeyDown() then 
-			if cfg.useConfig then 
-				--if cfg.SXconfigFrame:IsShown() then
-				ToggleFrame(cfg.SXconfigFrame)
-				--else
-				--ToggleFrame(cfg.SXconfigFrame)
-				--end
-			end 
-		else ToggleFrame(AddonList) end
+	elseif button == "MiddleButton" then 
+		ReloadUI()
 	end
 end)
 
@@ -63,7 +49,7 @@ end)
 
 local characterFrame = CreateFrame("BUTTON",nil, cfg.SXframe)
 characterFrame:SetSize(32, 32)
-characterFrame:SetPoint("LEFT",174,0)
+characterFrame:SetPoint("LEFT",150,0)
 characterFrame:EnableMouse(true)
 characterFrame:RegisterForClicks("AnyUp")
 local characterFrameIcon = characterFrame:CreateTexture(nil,"OVERLAY",nil,7)
@@ -74,9 +60,17 @@ characterFrameIcon:SetVertexColor(unpack(cfg.color.normal))
 characterFrame:SetScript("OnEnter", function()
 	if InCombatLockdown() then return end
 	characterFrameIcon:SetVertexColor(unpack(cfg.color.hover))
+	GameTooltip:SetOwner(characterFrame, cfg.tooltipPos)
+	GameTooltip:AddLine(cfg.TooltipTitleText("Персонаж"))
+	GameTooltip:Show()
 end)
 
-characterFrame:SetScript("OnLeave", function() characterFrameIcon:SetVertexColor(unpack(cfg.color.normal)) end)
+characterFrame:SetScript("OnLeave", function() 
+	if ( GameTooltip:IsShown() ) then 
+		GameTooltip:Hide() 
+	end 
+	characterFrameIcon:SetVertexColor(unpack(cfg.color.normal)) 
+end)
 
 characterFrame:SetScript("OnClick", function(self, button, down)
 	if InCombatLockdown() then return end
@@ -103,9 +97,17 @@ spellFrameIcon:SetVertexColor(unpack(cfg.color.normal))
 spellFrame:SetScript("OnEnter", function()
 	if InCombatLockdown() then return end
 	spellFrameIcon:SetVertexColor(unpack(cfg.color.hover))
+	GameTooltip:SetOwner(spellFrame, cfg.tooltipPos)
+	GameTooltip:AddLine(cfg.TooltipTitleText("Заклинания и способности"))
+	GameTooltip:Show()
 end)
 
-spellFrame:SetScript("OnLeave", function() spellFrameIcon:SetVertexColor(unpack(cfg.color.normal)) end)
+spellFrame:SetScript("OnLeave", function() 
+	if ( GameTooltip:IsShown() ) then 
+		GameTooltip:Hide() 
+	end 
+	spellFrameIcon:SetVertexColor(unpack(cfg.color.normal)) 
+end)
 
 spellFrame:SetScript("OnClick", function(self, button, down)
 	if InCombatLockdown() then return end
@@ -132,9 +134,17 @@ talentFrameIcon:SetVertexColor(unpack(cfg.color.normal))
 talentFrame:SetScript("OnEnter", function()
 	if InCombatLockdown() then return end
 	talentFrameIcon:SetVertexColor(unpack(cfg.color.hover))
+	GameTooltip:SetOwner(talentFrame, cfg.tooltipPos)
+	GameTooltip:AddLine(cfg.TooltipTitleText("Таланты"))
+	GameTooltip:Show()
 end)
 
-talentFrame:SetScript("OnLeave", function() talentFrameIcon:SetVertexColor(unpack(cfg.color.normal)) end)
+talentFrame:SetScript("OnLeave", function() 
+	if ( GameTooltip:IsShown() ) then 
+		GameTooltip:Hide() 
+	end 
+	talentFrameIcon:SetVertexColor(unpack(cfg.color.normal)) 
+end)
 
 talentFrame:SetScript("OnClick", function(self, button, down)
 	if InCombatLockdown() then return end
@@ -161,9 +171,17 @@ achievementFrameIcon:SetVertexColor(unpack(cfg.color.normal))
 achievementFrame:SetScript("OnEnter", function()
 	if InCombatLockdown() then return end
 	achievementFrameIcon:SetVertexColor(unpack(cfg.color.hover))
+	GameTooltip:SetOwner(achievementFrame, cfg.tooltipPos)
+	GameTooltip:AddLine(cfg.TooltipTitleText("Достижения"))
+	GameTooltip:Show()
 end)
 
-achievementFrame:SetScript("OnLeave", function() achievementFrameIcon:SetVertexColor(unpack(cfg.color.normal)) end)
+achievementFrame:SetScript("OnLeave", function() 
+	if ( GameTooltip:IsShown() ) then 
+		GameTooltip:Hide() 
+	end 
+	achievementFrameIcon:SetVertexColor(unpack(cfg.color.normal)) 
+end)
 
 achievementFrame:SetScript("OnClick", function(self, button, down)
 	if InCombatLockdown() then return end
@@ -190,9 +208,17 @@ questFrameIcon:SetVertexColor(unpack(cfg.color.normal))
 questFrame:SetScript("OnEnter", function()
 	if InCombatLockdown() then return end
 	questFrameIcon:SetVertexColor(unpack(cfg.color.hover))
+	GameTooltip:SetOwner(questFrame, cfg.tooltipPos)
+	GameTooltip:AddLine(cfg.TooltipTitleText("Задания"))
+	GameTooltip:Show()
 end)
 
-questFrame:SetScript("OnLeave", function() questFrameIcon:SetVertexColor(unpack(cfg.color.normal)) end)
+questFrame:SetScript("OnLeave", function() 
+	if ( GameTooltip:IsShown() ) then 
+		GameTooltip:Hide() 
+	end 
+	questFrameIcon:SetVertexColor(unpack(cfg.color.normal)) 
+end)
 
 questFrame:SetScript("OnClick", function(self, button, down)
 	if InCombatLockdown() then return end
@@ -219,6 +245,9 @@ lfgFrameIcon:SetVertexColor(unpack(cfg.color.normal))
 lfgFrame:SetScript("OnEnter", function()
 	if InCombatLockdown() then return end
 	lfgFrameIcon:SetVertexColor(unpack(cfg.color.hover))
+	GameTooltip:SetOwner(lfgFrame, cfg.tooltipPos)
+	GameTooltip:AddLine(cfg.TooltipTitleText("тест 1"))
+	GameTooltip:Show()
 end)
 
 lfgFrame:SetScript("OnLeave", function() lfgFrameIcon:SetVertexColor(unpack(cfg.color.normal)) end)
@@ -248,6 +277,9 @@ adventureFrameIcon:SetVertexColor(unpack(cfg.color.normal))
 adventureFrame:SetScript("OnEnter", function()
 	if InCombatLockdown() then return end
 	adventureFrameIcon:SetVertexColor(unpack(cfg.color.hover))
+	GameTooltip:SetOwner(adventureFrame, cfg.tooltipPos)
+	GameTooltip:AddLine(cfg.TooltipTitleText("тест 2"))
+	GameTooltip:Show()
 end)
 
 adventureFrame:SetScript("OnLeave", function() adventureFrameIcon:SetVertexColor(unpack(cfg.color.normal)) end)
@@ -277,6 +309,9 @@ pvpFrameIcon:SetVertexColor(unpack(cfg.color.normal))
 pvpFrame:SetScript("OnEnter", function()
 	if InCombatLockdown() then return end
 	pvpFrameIcon:SetVertexColor(unpack(cfg.color.hover))
+	GameTooltip:SetOwner(pvpFrame, cfg.tooltipPos)
+	GameTooltip:AddLine(cfg.TooltipTitleText("тест 3"))
+	GameTooltip:Show()
 end)
 
 pvpFrame:SetScript("OnLeave", function() pvpFrameIcon:SetVertexColor(unpack(cfg.color.normal)) end)
@@ -306,9 +341,17 @@ mountFrameIcon:SetVertexColor(unpack(cfg.color.normal))
 mountFrame:SetScript("OnEnter", function()
 	if InCombatLockdown() then return end
 	mountFrameIcon:SetVertexColor(unpack(cfg.color.hover))
+	GameTooltip:SetOwner(mountFrame, cfg.tooltipPos)
+	GameTooltip:AddLine(cfg.TooltipTitleText("Колекция"))
+	GameTooltip:Show()
 end)
 
-mountFrame:SetScript("OnLeave", function() mountFrameIcon:SetVertexColor(unpack(cfg.color.normal)) end)
+mountFrame:SetScript("OnLeave", function() 
+	if ( GameTooltip:IsShown() ) then 
+		GameTooltip:Hide() 
+	end 
+	mountFrameIcon:SetVertexColor(unpack(cfg.color.normal)) 
+end)
 
 mountFrame:SetScript("OnClick", function(self, button, down)
 	if InCombatLockdown() then return end
@@ -335,9 +378,17 @@ shopFrameIcon:SetVertexColor(unpack(cfg.color.normal))
 shopFrame:SetScript("OnEnter", function()
 	if InCombatLockdown() then return end
 	shopFrameIcon:SetVertexColor(unpack(cfg.color.hover))
+	GameTooltip:SetOwner(shopFrame, cfg.tooltipPos)
+	GameTooltip:AddLine(cfg.TooltipTitleText("Магазин"))
+	GameTooltip:Show()
 end)
 
-shopFrame:SetScript("OnLeave", function() shopFrameIcon:SetVertexColor(unpack(cfg.color.normal)) end)
+shopFrame:SetScript("OnLeave", function() 
+	shopFrameIcon:SetVertexColor(unpack(cfg.color.normal)) 
+	if ( GameTooltip:IsShown() ) then 
+		GameTooltip:Hide() 
+	end 
+end)
 
 shopFrame:SetScript("OnClick", function(self, button, down)
 	if InCombatLockdown() then return end
@@ -364,9 +415,17 @@ helpFrameIcon:SetVertexColor(unpack(cfg.color.normal))
 helpFrame:SetScript("OnEnter", function()
 	if InCombatLockdown() then return end
 	helpFrameIcon:SetVertexColor(unpack(cfg.color.hover))
+	GameTooltip:SetOwner(helpFrame, cfg.tooltipPos)
+	GameTooltip:AddLine(cfg.TooltipTitleText("Помощь"))
+	GameTooltip:Show()
 end)
 
-helpFrame:SetScript("OnLeave", function() helpFrameIcon:SetVertexColor(unpack(cfg.color.normal)) end)
+helpFrame:SetScript("OnLeave", function() 
+	helpFrameIcon:SetVertexColor(unpack(cfg.color.normal)) 
+	if ( GameTooltip:IsShown() ) then 
+		GameTooltip:Hide() 
+	end 
+end)
 
 helpFrame:SetScript("OnClick", function(self, button, down)
 	if InCombatLockdown() then return end

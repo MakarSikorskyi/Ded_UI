@@ -6,7 +6,7 @@ if not cfg.micromenu.show then return end
 
 local chatFrame = CreateFrame("BUTTON",nil, cfg.SXframe)
 chatFrame:SetSize(32, 32)
-chatFrame:SetPoint("LEFT",52,0)
+chatFrame:SetPoint("LEFT",40,0)
 chatFrame:EnableMouse(true)
 chatFrame:RegisterForClicks("AnyUp")
 local chatFrameIcon = chatFrame:CreateTexture(nil,"OVERLAY",nil,7)
@@ -41,7 +41,7 @@ end)
 
 local guildFrame = CreateFrame("BUTTON",nil, cfg.SXframe)
 guildFrame:SetSize(32, 32)
-guildFrame:SetPoint("LEFT",chatFrame,36,0)
+guildFrame:SetPoint("LEFT",chatFrame,32,0)
 guildFrame:EnableMouse(true)
 guildFrame:RegisterForClicks("AnyUp")
 
@@ -67,15 +67,14 @@ guildFrame:SetScript("OnEnter", function()
 	if not cfg.micromenu.showTooltip then return end
 if ( IsInGuild() ) then
 	GameTooltip:SetOwner(guildFrame, cfg.tooltipPos)
-	GameTooltip:AddLine(cfg.TooltipTitleText("Гильдия"))
-	GameTooltip:AddLine(" ")
 	--------------------------
 
 	guildList = {}
 	guildName, guildRank, _ = GetGuildInfo("player")
 	guildMotto = GetGuildRosterMOTD()
 		
-	GameTooltip:AddDoubleLine("Гильда:", guildName, 1, 1, 0, 0, 1, 0)
+	GameTooltip:AddDoubleLine(cfg.TooltipTitleText("Гильдия"), guildName)
+	GameTooltip:AddLine(" ")
 	for i = 0, select(1, GetNumGuildMembers()) do
 		local name, rank, rankIndex, level, class, zone, note, officernote, online, status, classFileName, achievementPoints, achievementRank, isMobile, canSoR = GetGuildRosterInfo(i)
 		if ( online ) then
@@ -87,10 +86,10 @@ if ( IsInGuild() ) then
 		end
 	end
 else
-	--GameTooltip:AddLine("No Guild")
+	GameTooltip:AddLine(cfg.TooltipTitleText("<Без гильдии>"))
 end
 GameTooltip:AddLine(" ")
-if ( IsInGuild() ) then GameTooltip:AddDoubleLine("<Left-click>", "Open Guild Page", 1, 1, 0, 1, 1, 1) end
+if ( IsInGuild() ) then GameTooltip:AddDoubleLine("<ЛКМ>", "Открыть окно гильдии", 1, 1, 1, 1, 1, 0) end
 -----------------------
 GameTooltip:Show()
 end)
@@ -111,7 +110,7 @@ end)
 
 local friendFrame = CreateFrame("BUTTON",nil, cfg.SXframe)
 friendFrame:SetSize(32, 32)
-friendFrame:SetPoint("LEFT",guildFrame,36,0)
+friendFrame:SetPoint("LEFT",guildFrame,34,0)
 friendFrame:EnableMouse(true)
 friendFrame:RegisterForClicks("AnyUp")
 
@@ -221,7 +220,7 @@ local onlineFriends = false
 		end
 	end
 if onlineFriends then GameTooltip:AddLine(" ") end
-GameTooltip:AddDoubleLine("<Left-click>", "Open Friends List", 1, 1, 0, 1, 1, 1)
+GameTooltip:AddDoubleLine("<ЛКМ>", "Открыть список друзей", 1, 1, 1, 1, 1, 0)
 -----------------------
 GameTooltip:Show()
 end

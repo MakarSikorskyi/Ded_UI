@@ -85,7 +85,7 @@ local function OnEnter()
 	activeSpec = C_Talent.GetSpecInfoCache().activeTalentGroup
 	
 	GameTooltip:SetOwner(talentFrame, cfg.tooltipPos)
-	GameTooltip:AddLine(cfg.TooltipTitleText("Таланты"))
+	GameTooltip:AddLine(cfg.TooltipTitleText("Специализация"))
 	GameTooltip:AddLine(" ")
 
 	for i = 1,maxSpecs do
@@ -107,9 +107,9 @@ local function OnEnter()
 
 	local name,_ = C_Talent.GetTalentGroupSettings(indexToChangeSpec)
 	GameTooltip:AddLine(" ")
-	GameTooltip:AddDoubleLine("ЛКМ", "Сменить специализацию на "..(name and name or indexToChangeSpec), 1, 1, 1, 1, 1, 0)
-	GameTooltip:AddDoubleLine("ПКМ", "Открыть окно талантов", 1, 1, 1, 1, 1, 0)
-	GameTooltip:AddDoubleLine("Гортать колесиком мыши для выбора специализации", "", 1, 1, 1, 1, 1, 0)
+	GameTooltip:AddDoubleLine("<ЛКМ>", "Сменить специализацию на "..(name and name or indexToChangeSpec), 1, 1, 1, 1, 1, 0)
+	GameTooltip:AddDoubleLine("<ПКМ>", "Открыть окно талантов", 1, 1, 1, 1, 1, 0)
+	GameTooltip:AddDoubleLine("Колесико мыши для выбора специализации", "", 1, 1, 1, 1, 1, 0)
 
 	primarySpecIcon:SetVertexColor(unpack(cfg.color.hover))
 	GameTooltip:Show()

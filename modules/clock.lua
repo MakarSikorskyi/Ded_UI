@@ -247,8 +247,8 @@ clockFrame:SetScript("OnEnter", function()
 		GameTooltip:AddDoubleLine("Местное время", date("%H:%M"), 1, 1, 1, 1, 1, 1)
 	end
 	GameTooltip:AddLine(" ")
-	GameTooltip:AddDoubleLine("<Left-click>", "Open Calendar", 1, 1, 0, 1, 1, 1)
-	GameTooltip:AddDoubleLine("<Right-click>", "Open Clock", 1, 1, 0, 1, 1, 1)
+	GameTooltip:AddDoubleLine("<ЛКМ>", "Открыть календарь", 1, 1, 1, 1, 1, 0)
+	GameTooltip:AddDoubleLine("<ПКМ>", "Открыть часы", 1, 1, 1, 1, 1, 0)
 	GameTooltip:Show()
 	end	
 end)
