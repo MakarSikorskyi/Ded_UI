@@ -22,9 +22,10 @@ cfg.shadow = true
 cfg.color = {
 	normal = {1,1,1,.75},						-- SETS THE SAME COLOR FOR THE TEXT
 	inactive = {1,1,1,.25},						-- SET THE COLOR FOR THE INACTICE ICONS
-	hover = {cfg.cc.r,cfg.cc.g,cfg.cc.b,.75},	-- DOES NOT CHANGE THE TEXTCOLOR
+	hover = {.69, 0, .11, .75},	-- DOES NOT CHANGE THE TEXTCOLOR
 	barcolor = {.094,.094,.102,.45},			-- THE COLOR OF THE BAR
-	red = {.78,.1,.16,.75}
+	red = {.78,.1,.16,.75},
+	main = {.69, 0, .11}
 }
 if cfg.CLASS == "PRIEST" then cfg.color.hover = {.5,.5,0,.75} end -- ADDED BEACUSE NORMALY THE PRIEST COLOR IS THE SAME AS THE NORMAL COLOR
 

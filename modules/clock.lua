@@ -15,7 +15,7 @@ local next = next
 local select = select
 local time = time
 local tonumber = tonumber
-local find, format, gsub, join, utf8sub = string.find, string.format, string.gsub, string.join, string.utf8sub
+local find, format, gsub, join = string.find, string.format, string.gsub, string.join
 local tinsert, wipe = table.insert, table.wipe
 --WoW API / Variables
 local GetGameTime = GetGameTime
@@ -46,10 +46,10 @@ local numSavedInstances = 0
 
 local locale = GetLocale()
 local difficultyTag = { -- Normal, Normal, Heroic, Heroic
-	utf8sub(PLAYER_DIFFICULTY1, 1, 1), -- N
-	utf8sub(PLAYER_DIFFICULTY1, 1, 1), -- N
-	utf8sub(PLAYER_DIFFICULTY2, 1, 1), -- H
-	utf8sub(PLAYER_DIFFICULTY2, 1, 1), -- H
+	PLAYER_DIFFICULTY1, -- N
+	PLAYER_DIFFICULTY1, -- N
+	PLAYER_DIFFICULTY2, -- H
+	PLAYER_DIFFICULTY2, -- H
 }
 
 local function GetInstanceImages(...)
@@ -91,7 +91,7 @@ clockFrame:RegisterForClicks("AnyUp")
 
 local clockText = clockFrame:CreateFontString(nil, "OVERLAY")
 clockText:SetFont(cfg.text.font, cfg.SXframe:GetHeight()-10)
-clockText:SetPoint("CENTER", clockFrame, "TOP", 0, -9)
+clockText:SetPoint("CENTER", clockFrame, "TOP", 0, -11)
 clockText:SetTextColor(unpack(cfg.color.normal))
 
 local amText = clockFrame:CreateFontString(nil, "OVERLAY")
@@ -101,11 +101,11 @@ amText:SetTextColor(unpack(cfg.color.inactive))
 
 local calendarText = clockFrame:CreateFontString(nil, "OVERLAY")
 calendarText:SetFont(cfg.text.font, cfg.text.smallFontSize)
-calendarText:SetPoint("CENTER", clockFrame, "BOTTOM", 0, 7)
+calendarText:SetPoint("CENTER", clockFrame, "BOTTOM", 0, 6)
 if cfg.core.position ~= "BOTTOM" then
 	calendarText:SetPoint("CENTER", clockFrame, "TOP")
 end
-calendarText:SetTextColor(unpack(cfg.color.hover))
+calendarText:SetTextColor(unpack(cfg.color.main))
 
 local elapsed = 0
 clockFrame:SetScript('OnUpdate', function(self, e)
@@ -155,7 +155,7 @@ end)
 
 clockFrame:SetScript("OnEnter", function()
 	if InCombatLockdown() then return end
-	clockText:SetTextColor(unpack(cfg.color.hover))
+	-- clockText:SetTextColor(unpack(cfg.color.hover))
 	if cfg.clock.showTooltip then
 	hour, minu = GetGameTime()
 	if minu < 10 then minu = ("0"..minu) end
