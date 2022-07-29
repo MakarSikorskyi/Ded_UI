@@ -17,6 +17,7 @@ cfg.fontFolder = "Fonts\\"
 ---------------------------------------------
 -- DO NOT TOUCH ANYTHING ABOVE HERE
 ---------------------------------------------
+cfg.shadow = true
 
 cfg.color = {
 	normal = {1,1,1,.75},						-- SETS THE SAME COLOR FOR THE TEXT

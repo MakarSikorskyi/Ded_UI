@@ -1,11 +1,12 @@
 ## Interface: 30300
-## Title: SX_Databar
-## Author: |cff00FF99Saxitoxin
-## Notes: Adds a bottombar by the request of |cffffffffu/sammojo|r on Reddit, Icons made by |cffffffffu/sammojo|r
-## SavedVariables: TEST_CONFIG
+## Title: |cffCC3333 !|Ded_UI
+## Author: |cff00FF99Ded Makar
+## Notes: Some small UI changes for WoW 3.3.5 Sirus x2, Icons made by |cffffffffu/sammojo|r
+## SavedVariables: TEST_CONFIG, ShadowLevel
 
 settings.lua
 
+modules\shadow.lua
 modules\config.lua
 modules\social.lua
 modules\micromenu.lua
