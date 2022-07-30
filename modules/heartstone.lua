@@ -99,7 +99,7 @@ end
 
 local function updateActiveList()
 	activeHS = 1
-	
+
 	count = #availableHsList
 	for i=0, count do availableHsList[i]=nil end
 
@@ -150,6 +150,9 @@ local function hsHover()
 			)
 		end
 	end
+
+	GameTooltip:AddLine(" ")
+	GameTooltip:AddDoubleLine("Колесико мыши для выбора", "", 1, 1, 1, 1, 1, 0)
 	GameTooltip:Show()
 end
 
