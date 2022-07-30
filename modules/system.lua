@@ -67,10 +67,11 @@ end
     GameTooltip:AddDoubleLine("Total", memformat(total), 1,1,0, 1,1,0)
     GameTooltip:AddDoubleLine("Total incl. Blizzard", memformat(blizz), 1,1,0, 1,1,0)
 	GameTooltip:AddLine(" ")
-	GameTooltip:AddDoubleLine("<Left-click>", "Force garbage collection", 1, 1, 0, 1, 1, 1)
+	GameTooltip:AddDoubleLine("<ЛКМ>", "Очистить мусор", 1, 1, 0, 1, 1, 1)
 	if not IsShiftKeyDown() then
-		GameTooltip:AddDoubleLine("<Shift-hold>", "Show |cffffff00"..cfg.system.addonListShift.."|r addons", 1, 1, 0, 1, 1, 1)
+		GameTooltip:AddDoubleLine("<Shift-hold>", "Показать |cffffff00"..cfg.system.addonListShift.."|r аддонов", 1, 1, 0, 1, 1, 1)
 	end
+	GameTooltip:AddDoubleLine("<ПКМ>", "Настройки изображения", 1, 1, 0, 1, 1, 1)
 	-------------------------------------------
 	GameTooltip:Show()
 end
@@ -119,7 +120,7 @@ pingFrame:SetScript("OnClick", function(self, button, down)
 		collectgarbage()
 		UpdateAddOnMemoryUsage()
 		local after = gcinfo()
-		print("|cff6699FFSXUI|r: Cleaned: |cffffff00"..memformat(before-after))
+		print("|cffb1001dDed Ui|r: Cleaned: |cffffff00"..memformat(before-after))
 	elseif button == "RightButton" then
 		ToggleFrame(VideoOptionsFrame)
 	end
@@ -163,22 +164,22 @@ fpsFrame:SetScript("OnClick", function(self, button, down)
 		collectgarbage()
 		UpdateAddOnMemoryUsage()
 		local after = gcinfo()
-		print("|cff6699FFSXUI|r: Cleaned: |cffffff00"..memformat(before-after))
+		print("|cffb1001dDed Ui|r: Очищено: |cffffff00"..memformat(before-after))
 	elseif button == "RightButton" then
 		ToggleFrame(VideoOptionsFrame)
 	end
 end)
 ---------------------------------------------------------------------
 
-local function SXUImemory()
-local t = 0
-UpdateAddOnMemoryUsage()
-for i=1, GetNumAddOns(), 1 do
-	t = t + GetAddOnMemoryUsage(i)
-end
-return cfg.memformat(t)
+-- local function SXUImemory()
+-- local t = 0
+-- UpdateAddOnMemoryUsage()
+-- for i=1, GetNumAddOns(), 1 do
+-- 	t = t + GetAddOnMemoryUsage(i)
+-- end
+-- return cfg.memformat(t)
 
-end
+-- end
 
 local function updatePerformanceText()
 	local fps = floor(GetFramerate())

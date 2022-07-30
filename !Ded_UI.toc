@@ -1,6 +1,6 @@
 ## Interface: 30300
-## Title: |cffCC3333 !|Ded_UI
-## Author: |cff00FF99Ded Makar
+## Title: |cffb1001d !|Ded_UI
+## Author: |cffb1001d Makar
 ## Notes: Some small UI changes for WoW 3.3.5 Sirus x2, Icons made by |cffffffffu/sammojo|r
 ## SavedVariables: TEST_CONFIG, ShadowLevel
 

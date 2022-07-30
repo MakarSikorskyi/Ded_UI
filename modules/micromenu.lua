@@ -246,7 +246,7 @@ lfgFrame:SetScript("OnEnter", function()
 	if InCombatLockdown() then return end
 	lfgFrameIcon:SetVertexColor(unpack(cfg.color.hover))
 	GameTooltip:SetOwner(lfgFrame, cfg.tooltipPos)
-	GameTooltip:AddLine(cfg.TooltipTitleText("тест 1"))
+	GameTooltip:AddLine(cfg.TooltipTitleText("Приключения"))
 	GameTooltip:Show()
 end)
 
@@ -255,7 +255,7 @@ lfgFrame:SetScript("OnLeave", function() lfgFrameIcon:SetVertexColor(unpack(cfg.
 lfgFrame:SetScript("OnClick", function(self, button, down)
 	if InCombatLockdown() then return end
 	if button == "LeftButton" then 
-		securecall(PVEFrame_ToggleFrame, 'GroupFinderFrame')
+		ToggleFrame(EncounterJournal)
 	end
 end)
 
@@ -278,7 +278,7 @@ adventureFrame:SetScript("OnEnter", function()
 	if InCombatLockdown() then return end
 	adventureFrameIcon:SetVertexColor(unpack(cfg.color.hover))
 	GameTooltip:SetOwner(adventureFrame, cfg.tooltipPos)
-	GameTooltip:AddLine(cfg.TooltipTitleText("тест 2"))
+	GameTooltip:AddLine(cfg.TooltipTitleText("Поиск подземелья"))
 	GameTooltip:Show()
 end)
 
@@ -287,7 +287,7 @@ adventureFrame:SetScript("OnLeave", function() adventureFrameIcon:SetVertexColor
 adventureFrame:SetScript("OnClick", function(self, button, down)
 	if InCombatLockdown() then return end
 	if button == "LeftButton" then 
-		EJMicroButton:Click()
+		ToggleFrame(LFDParentFrame)
 	end
 end)
 
@@ -310,7 +310,7 @@ pvpFrame:SetScript("OnEnter", function()
 	if InCombatLockdown() then return end
 	pvpFrameIcon:SetVertexColor(unpack(cfg.color.hover))
 	GameTooltip:SetOwner(pvpFrame, cfg.tooltipPos)
-	GameTooltip:AddLine(cfg.TooltipTitleText("тест 3"))
+	GameTooltip:AddLine(cfg.TooltipTitleText("PVP"))
 	GameTooltip:Show()
 end)
 
@@ -319,7 +319,7 @@ pvpFrame:SetScript("OnLeave", function() pvpFrameIcon:SetVertexColor(unpack(cfg.
 pvpFrame:SetScript("OnClick", function(self, button, down)
 	if InCombatLockdown() then return end
 	if button == "LeftButton" then 
-		securecall(PVEFrame_ToggleFrame, 'PVPUIFrame', HonorFrame)
+		securecall(TogglePVPUIFrame)
 	end
 end)
 

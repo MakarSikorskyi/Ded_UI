@@ -90,7 +90,7 @@ clockFrame:EnableMouse(true)
 clockFrame:RegisterForClicks("AnyUp")
 
 local clockText = clockFrame:CreateFontString(nil, "OVERLAY")
-clockText:SetFont(cfg.text.font, cfg.SXframe:GetHeight()-10)
+clockText:SetFont(cfg.text.font, cfg.SXframe:GetHeight()-15)
 clockText:SetPoint("CENTER", clockFrame, "TOP", 0, -11)
 clockText:SetTextColor(unpack(cfg.color.normal))
 
@@ -100,7 +100,7 @@ amText:SetPoint("RIGHT")
 amText:SetTextColor(unpack(cfg.color.inactive))
 
 local calendarText = clockFrame:CreateFontString(nil, "OVERLAY")
-calendarText:SetFont(cfg.text.font, cfg.text.smallFontSize)
+calendarText:SetFont(cfg.text.font, cfg.text.normalFontSize)
 calendarText:SetPoint("CENTER", clockFrame, "BOTTOM", 0, 6)
 if cfg.core.position ~= "BOTTOM" then
 	calendarText:SetPoint("CENTER", clockFrame, "TOP")
@@ -141,7 +141,7 @@ clockFrame:SetScript('OnUpdate', function(self, e)
 		if (CalendarGetNumPendingInvites() > 0) then
 			calendarText:SetText(string.format("%s  (|cffffff00%i|r)", "New Event!", (CalendarGetNumPendingInvites())))
 		else
-			calendarText:SetText(date("%d/%m/%Y"))
+			calendarText:SetText(date("%d.%m.%Y"))
 		end
 		clockFrame:SetWidth(clockText:GetStringWidth() + amText:GetStringWidth())
 		clockFrame:SetPoint("CENTER", cfg.SXframe)

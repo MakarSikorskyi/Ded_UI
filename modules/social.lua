@@ -65,33 +65,31 @@ guildFrame:SetScript("OnEnter", function()
 	if InCombatLockdown() then return end
 	guildIcon:SetVertexColor(unpack(cfg.color.hover))
 	if not cfg.micromenu.showTooltip then return end
-if ( IsInGuild() ) then
 	GameTooltip:SetOwner(guildFrame, cfg.tooltipPos)
-	--------------------------
-
-	guildList = {}
-	guildName, guildRank, _ = GetGuildInfo("player")
-	guildMotto = GetGuildRosterMOTD()
-		
-	GameTooltip:AddDoubleLine(cfg.TooltipTitleText("Гильдия"), guildName)
-	GameTooltip:AddLine(" ")
-	for i = 0, select(1, GetNumGuildMembers()) do
-		local name, rank, rankIndex, level, class, zone, note, officernote, online, status, classFileName, achievementPoints, achievementRank, isMobile, canSoR = GetGuildRosterInfo(i)
-		if ( online ) then
-			if status == 0 then status = "" elseif status == 1 then status = "AFK" elseif status == 2 then status = "DND" end
-		local cCol = string.format("%02X%02X%02X", RAID_CLASS_COLORS[classFileName].r*255, RAID_CLASS_COLORS[classFileName].g*255, RAID_CLASS_COLORS[classFileName].b*255)
-		local lineL = string.format("%s |cff%s%s|r %s %s", level, cCol, name, status, note)
-		local lineR = string.format("%s|cffffffff %s", isMobile and "|cffffff00[M]|r " or "", zone or "")
-		GameTooltip:AddDoubleLine(lineL,lineR)
+	if ( IsInGuild() ) then
+		guildList = {}
+		guildName, guildRank, _ = GetGuildInfo("player")
+		guildMotto = GetGuildRosterMOTD()
+			
+		GameTooltip:AddDoubleLine(cfg.TooltipTitleText("Гильдия"), guildName)
+		GameTooltip:AddLine(" ")
+		for i = 0, select(1, GetNumGuildMembers()) do
+			local name, rank, rankIndex, level, class, zone, note, officernote, online, status, classFileName, achievementPoints, achievementRank, isMobile, canSoR = GetGuildRosterInfo(i)
+			if ( online ) then
+				if status == 0 then status = "" elseif status == 1 then status = "AFK" elseif status == 2 then status = "DND" end
+			local cCol = string.format("%02X%02X%02X", RAID_CLASS_COLORS[classFileName].r*255, RAID_CLASS_COLORS[classFileName].g*255, RAID_CLASS_COLORS[classFileName].b*255)
+			local lineL = string.format("%s |cff%s%s|r %s %s", level, cCol, name, status, note)
+			local lineR = string.format("%s|cffffffff %s", isMobile and "|cffffff00[M]|r " or "", zone or "")
+			GameTooltip:AddDoubleLine(lineL,lineR)
+			end
 		end
+	else
+		GameTooltip:AddLine(cfg.TooltipTitleText("Поиск гильдии"))
 	end
-else
-	GameTooltip:AddLine(cfg.TooltipTitleText("<Без гильдии>"))
-end
-GameTooltip:AddLine(" ")
-if ( IsInGuild() ) then GameTooltip:AddDoubleLine("<ЛКМ>", "Открыть окно гильдии", 1, 1, 1, 1, 1, 0) end
------------------------
-GameTooltip:Show()
+	GameTooltip:AddLine(" ")
+	if ( IsInGuild() ) then GameTooltip:AddDoubleLine("<ЛКМ>", "Открыть окно гильдии", 1, 1, 1, 1, 1, 0) end
+	-----------------------
+	GameTooltip:Show()
 end)
 
 guildFrame:SetScript("OnLeave", function() if ( GameTooltip:IsShown() ) then GameTooltip:Hide() end guildIcon:SetVertexColor(unpack(cfg.color.normal)) end)
@@ -99,12 +97,7 @@ guildFrame:SetScript("OnLeave", function() if ( GameTooltip:IsShown() ) then Gam
 guildFrame:SetScript("OnClick", function(self, button, down)
 	if InCombatLockdown() then return end
 	if button == "LeftButton" then 
-		if ( IsInGuild() ) then
-			ToggleGuildFrame()
-			GuildFrameTab2:Click()
-		else
-			print"|cff6699FFSXUI|r: You are not in a guild"
-		end
+		ToggleGuildFrame()
 	end
 end)
 
