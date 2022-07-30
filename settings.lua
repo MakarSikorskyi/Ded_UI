@@ -12,7 +12,6 @@ cfg.cc = (CUSTOM_CLASS_COLORS or RAID_CLASS_COLORS)[cfg.CLASS] --CLASS COLOR
 
 --media path
 cfg.mediaFolder = "Interface\\AddOns\\"..addon.."\\media\\"
-cfg.fontFolder = "Fonts\\"
 
 ---------------------------------------------
 -- DO NOT TOUCH ANYTHING ABOVE HERE
@@ -29,9 +28,8 @@ cfg.color = {
 }
 if cfg.CLASS == "PRIEST" then cfg.color.hover = {.5,.5,0,.75} end -- ADDED BEACUSE NORMALY THE PRIEST COLOR IS THE SAME AS THE NORMAL COLOR
 
-cfg.text = {				
-	--font = cfg.mediaFolder.."homizio_bold.ttf",	-- SETS THE FONT
-	font = cfg.fontFolder.."skurri.ttf",
+cfg.text = {
+	font = cfg.mediaFolder.."vag_world.ttf",   -- SETS THE FONT
 	normalFontSize = 14,	-- SET THE SIZE OF THE TEXTS
 	smallFontSize = 13,		-- SETS THE SIZE OF THE SMALLER TEXTS
 }
