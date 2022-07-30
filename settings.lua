@@ -211,7 +211,7 @@ local D = {
  
 local function Controller_OnEvent(self, event, arg)
     if event == "ADDON_LOADED" and arg == addon then -- "test" is addon name
-local CONFIG = CopyTable(D, TEST_CONFIG)
+local CONFIG = CopyTable(D, DedDB)
 ns.CONFIG = CONFIG -- makes this table available throughout addon
  
 local playerName, playerFaction, playerRealm = UnitName("player"), UnitFactionGroup("player"), GetRealmName()
@@ -223,18 +223,18 @@ end
 local realmData = CONFIG["money_related_stuff"][playerRealm] -- just an alias
 ns.realmData = realmData
  
-if not realmData[playerFaction] then
-    realmData[playerFaction] = {} -- creates a table if it doesn't exist
+-- if not realmData[playerName] then
+--     realmData[playerName] = {} -- creates a table if it doesn't exist
+-- end
+ 
+-- local factionData = realmData[playerFaction]
+-- ns.factionData = factionData
+ 
+if not realmData[playerName] then
+    realmData[playerName] = {} -- creates a table if it doesn't exist
 end
  
-local factionData = realmData[playerFaction]
-ns.factionData = factionData
- 
-if not factionData[playerName] then
-    factionData[playerName] = {} -- creates a table if it doesn't exist
-end
- 
-ns.playerData = factionData[playerName]
+ns.playerData = realmData[playerName]
  
 self:UnregisterEvent("ADDON_LOADED")
     elseif event == "PLAYER_LOGIN" then
@@ -274,7 +274,7 @@ self:UnregisterEvent("ADDON_LOADED")
  
         self:UnregisterEvent("PLAYER_LOGIN")
     elseif event == "PLAYER_LOGOUT" then
-        TEST_CONFIG = DiffTable(D, ns.CONFIG) -- writes data into TEST_CONFIG table
+        DedDB = DiffTable(D, ns.CONFIG) -- writes data into DedDB table
     end
 end
  

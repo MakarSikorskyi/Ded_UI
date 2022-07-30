@@ -6,13 +6,20 @@ if not cfg.gold.show then return end
 
 local onHover = false
 
+local function GroupDigits(num)
+	if not num then return 0 end
+	if abs(num) < 1000 then return num end
+
+	local neg = num < 0 and "-" or ""
+	local left, mid, right = tostring(abs(num)):match("^([^%d]*%d)(%d*)(.-)$")
+	return ("%s%s%s%s"):format(neg, left, mid:reverse():gsub("(%d%d%d)", "%1,"):reverse(), right)
+end
+
 local function goldConverter(money)
 	local g, s, c = abs(money/10000), abs(mod(money/100, 100)), abs(mod(money, 100))
 	local cash
-	if ( g < 1 ) then g = "" else g = string.format("|cffffffff%d|cffffd700g|r ", g) end
-	if ( s < 1 ) then s = "" else s = string.format("|cffffffff%d|cffc7c7cfs|r ", s) end
-	if ( c == 0 ) then c = "" else c = string.format("|cffffffff%d|cffeda55fc|r", c) end
-	cash = string.format("%s%s%s", g, s, c)
+	if ( g < 1 ) then g = "" else g = string.format("|cffffffff%s|cffffd700g|r ", GroupDigits(floor(g))) end
+	cash = string.format("%s", g)
 	if money == 0 then cash = "|cffffffff0" end
 	return cash
 end
@@ -32,7 +39,7 @@ goldFrame:RegisterForClicks("AnyUp")
 	if not cfg.gold.showTooltip then return end
 	if not onHover then return end
 	GameTooltip:SetOwner(goldFrame, cfg.tooltipPos)
-	GameTooltip:AddLine("[|cff6699FFGold|r]")
+	GameTooltip:AddLine(cfg.TooltipTitleText("Голда"))
 	GameTooltip:AddLine(" ")
 	---------------------------------------------------
 
@@ -75,7 +82,7 @@ goldFrame:RegisterForClicks("AnyUp")
 
 	
 	local totalGold = 0
-	for key, val in pairs(ns.realmData[playerFaction]) do
+	for key, val in pairs(ns.realmData) do
 		for k, v in pairs(val) do
 			if k == "money_on_log_out" then
 				totalGold = totalGold + v
@@ -84,7 +91,7 @@ goldFrame:RegisterForClicks("AnyUp")
 	end
 	
 	local realmDailyGold = 0
-	for key, val in pairs(ns.realmData[playerFaction]) do
+	for key, val in pairs(ns.realmData) do
 		for k, v in pairs(val) do
 			if k == "money_on_first_login_today" then
 				realmDailyGold = realmDailyGold + v
@@ -104,7 +111,7 @@ goldFrame:RegisterForClicks("AnyUp")
 	
 	
 	local realmWeeklyGold = 0
-	for key, val in pairs(ns.realmData[playerFaction]) do
+	for key, val in pairs(ns.realmData) do
 		for k, v in pairs(val) do
 			if k == "money_on_first_weekday" then
 				realmWeeklyGold = realmWeeklyGold + v
@@ -121,34 +128,19 @@ goldFrame:RegisterForClicks("AnyUp")
 		realmWeekGoldIcon = negativeSign
 	else
 	end
-	
-	GameTooltip:AddDoubleLine(playerName.."|r's Gold",format(goldConverter(gold)))
-	GameTooltip:AddLine(" ")
 
-	if IsShiftKeyDown() then
-		GameTooltip:AddDoubleLine("Realm Daily Balance",realmDayGoldIcon..format(goldConverter(realmDailyGold)))
-		GameTooltip:AddDoubleLine("Realm Weekly Balance",realmWeekGoldIcon..format(goldConverter(realmWeeklyGold)))
-		GameTooltip:AddLine(" ")
-	for key, val in pairs(ns.realmData[playerFaction]) do
-		for k, v in pairs(val) do
-			if k == "money_on_log_out" then
-				GameTooltip:AddDoubleLine(key,format(goldConverter(v)))
-			end
+	for key, val in pairs(ns.realmData) do
+		local classColor = (CUSTOM_CLASS_COLORS or RAID_CLASS_COLORS)[val["CLASS"]]
+		if val["money_on_log_out"] then 
+			GameTooltip:AddDoubleLine( cfg.hex(classColor.r, classColor.g, classColor.b)..key,format(goldConverter(val["money_on_log_out"])))
 		end
 	end
-		
-	else
-		GameTooltip:AddDoubleLine("Session Balance",sessionGoldIcon..format(goldConverter(sessionGold)))
-		GameTooltip:AddDoubleLine("Daily Balance",dayGoldIcon..format(goldConverter(dayGold)))
-		GameTooltip:AddDoubleLine("Weekly Balance",weekGoldIcon..format(goldConverter(weekGold)))
-		
-	end
 	GameTooltip:AddLine(" ")
-	GameTooltip:AddDoubleLine("Realm Gold","|cffffffff"..format(goldConverter(totalGold)))
-	if not IsShiftKeyDown() then
-		GameTooltip:AddLine(" ")
-		GameTooltip:AddDoubleLine("<Shift-hold>", "Show the |cffffff00"..playerRealm.." - "..playerFaction.."|r gold", 1, 1, 0, 1, 1, 1)
-	end
+	GameTooltip:AddDoubleLine("Баланс за сеанс",sessionGoldIcon..format(goldConverter(sessionGold)),1,1,1)
+	-- GameTooltip:AddDoubleLine("Баланс за день",dayGoldIcon..format(goldConverter(dayGold)),1,1,1)
+	GameTooltip:AddDoubleLine("Баланс за неделю",weekGoldIcon..format(goldConverter(weekGold)),1,1,1)
+	GameTooltip:AddLine(" ")
+	GameTooltip:AddDoubleLine("Всего голды","|cffffffff"..format(goldConverter(totalGold)),1,1,1)
 	GameTooltip:Show()
  end
 
@@ -212,7 +204,7 @@ if event == "MODIFIER_STATE_CHANGED" then
 	local g, s, c = abs(gold/10000), abs(mod(gold/100, 100)), abs(mod(gold, 100))
 	
 	if g > 1 then 
-		goldText:SetText(floor(g).."g")
+		goldText:SetText(GroupDigits(floor(g)).."g")
 	elseif s > 1 then 
 		goldText:SetText(floor(s).."s")
 	else 
