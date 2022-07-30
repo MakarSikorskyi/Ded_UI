@@ -6,18 +6,30 @@ local join = string.join
 --------------------------------------------------------------
 if not cfg.heartstone.show then return end
 
-local hsOnHover = false
+local activeHS = 1
+local hsText = GetBindLocation()
 
 local hsList = {
-	item = {
-		6948, -- Heartstone
-		52251, -- Djayna Portal
+	{
+		id = 307810,
+		type = "spell",
+		desc = "Остров Форбс"
 	},
-	spell = {
-		556, -- Astral Recall
-		307810, -- Forbs
-	}
+	{
+		id = 6948,
+		type = "item"
+	},
+	{
+		id = 52251,
+		type = "item",
+		desc = "Портал в Даларан"
+	},
+	{
+		id = 556,
+		type = "spell",
+	},
 }
+local availableHsList = {}
 
 local function AddTexture(texture)
 	return texture and "|T"..texture..":20:20:0:0:64:64:4:55:4:55|t" or ""
@@ -31,6 +43,7 @@ local HSFrame = CreateFrame("BUTTON","hsButton", teleportFrame, "SecureActionBut
 HSFrame:SetPoint("RIGHT")
 HSFrame:SetSize(16, 16)
 HSFrame:EnableMouse(true)
+HSFrame:EnableMouseWheel(true)
 HSFrame:RegisterForClicks("AnyUp")
 HSFrame:SetAttribute("type", "macro")
 
@@ -45,27 +58,122 @@ HSIcon:SetPoint("RIGHT", HSText,"LEFT",-2,0)
 HSIcon:SetTexture(cfg.mediaFolder.."datatexts\\hearth")
 HSIcon:SetVertexColor(unpack(cfg.color.normal))
 
+local function updateHsText() 
+	if availableHsList[activeHS] and availableHsList[activeHS].desc then
+		hsText = availableHsList[activeHS].desc
+	else
+		hsText = GetBindLocation()
+	end
+	HSText:SetText(strupper(hsText))
+end
+
+local function alreadyInList(id)
+	local find = false
+	for _,v in pairs(availableHsList) do
+		if v.id == id then
+				find = true
+		  	break
+		end 
+	end
+	return find
+end
+
+local function checkActiveList()
+	for i = 1, #hsList do
+		local data = hsList[i]
+		if data.type == "spell" then 
+			if IsSpellKnown(data.id) then
+				if not alreadyInList(data.id) then
+					table.insert(availableHsList, data)
+				end
+			end
+		elseif data.type == "item" then 
+			if GetItemCount(data.id) > 0 then
+				if not alreadyInList(data.id) then
+					table.insert(availableHsList, data)
+				end
+			end
+		end
+	end
+end
+
+local function updateActiveList()
+	activeHS = 1
+	
+	count = #availableHsList
+	for i=0, count do availableHsList[i]=nil end
+
+	checkActiveList()
+end
+
+local function hsHover()
+	GameTooltip:SetOwner(teleportFrame, cfg.tooltipPos)
+	GameTooltip:AddLine(cfg.TooltipTitleText("Heartstone"))
+	GameTooltip:AddLine(" ")
+	HSIcon:SetVertexColor(unpack(cfg.color.hover))
+
+	checkActiveList()
+
+	updateHsText()
+	
+	maxHS =  #availableHsList
+
+	for i = 1, #availableHsList do
+		local data = availableHsList[i]
+
+		local CDremaining = "Ready"
+		local startTime, duration
+		local name, icon
+
+		if data.type == "spell" then 
+			name, _, icon = GetSpellInfo(data.id)
+			startTime, duration = GetSpellCooldown(data.id)
+		elseif data.type == "item" then 
+			name, _, _, _, _, _, _, _, _, icon = GetItemInfo(data.id)
+			startTime, duration = GetItemCooldown(data.id)
+		end
+
+		if startTime ~= 0 then
+			CDremaining = (startTime+duration)-GetTime()
+			CDremaining = SecondsToTime(CDremaining)
+		end
+
+		if i == activeHS then
+			GameTooltip:AddDoubleLine(
+				join(" ",AddTexture(icon and icon or nil), cfg.hex(cfg.color.main)..name),
+				cfg.hex(1,1,1)..CDremaining
+			)
+		else 
+			GameTooltip:AddDoubleLine(
+				cfg.hex(1,1,1)..join(" ",AddTexture(icon and icon or nil), name),
+				cfg.hex(1,1,1)..CDremaining
+			)
+		end
+	end
+	GameTooltip:Show()
+end
+
 HSFrame:SetScript("OnEnter", function()
 	if InCombatLockdown() then return end
 	HSIcon:SetVertexColor(unpack(cfg.color.hover))
 	if not cfg.heartstone.showTooltip then return end
-	local startTime, duration = GetItemCooldown(6948)
-	if startTime ~= 0 then
-		local CDremaining = (startTime+duration)-GetTime()
-		GameTooltip:SetOwner(teleportFrame, cfg.tooltipPos)
-		GameTooltip:AddDoubleLine("Cooldown",SecondsToTime(CDremaining),1,1,0,1,1,1)
-		GameTooltip:Show()
-	end
-	hsOnHover = true
+	hsHover()
 end)
 
 HSFrame:SetScript("OnLeave", function() 
-	hsOnHover = false
-	if IsUsableItem(6948) and GetItemCooldown(6948) == 0 then
-		HSIcon:SetVertexColor(unpack(cfg.color.normal))
-	else
-		HSIcon:SetVertexColor(unpack(cfg.color.inactive))
+	HSIcon:SetVertexColor(unpack(cfg.color.normal))
+	if ( GameTooltip:IsShown() ) then GameTooltip:Hide() end
+end)
+
+HSFrame:SetScript("OnMouseWheel", function(self,delta)
+	activeHS = activeHS - delta
+	if activeHS > maxHS then
+		activeHS = maxHS
+	elseif activeHS <= 1 then
+		activeHS = 1
 	end
+	if ( GameTooltip:IsShown() ) then GameTooltip:Hide() end
+	hsHover(self)
 end)
 
 -- Change the button action before the click reaches it:
@@ -75,105 +183,22 @@ function HSFrame:ChangeAction(action)
 end
 
 HSFrame:SetScript("PreClick", function(self)
-     if InCombatLockdown() then return end -- can't change attributes in combat
+    if InCombatLockdown() then return end -- can't change attributes in combat
 
-     -- Innkeeper's Daughter
-     if IsUsableItem(64488) and GetItemCooldown(64488) == 0 then
-          local itemName, itemLink, _, _, _, _, _, _, _, itemIcon = GetItemInfo(64488)
-          return self:ChangeAction("/use " .. itemName)
+	if availableHsList[activeHS] then
+		local data = availableHsList[activeHS]
 
-     -- Hearthstone
-     elseif IsUsableItem(6948) and GetItemCooldown(6948) == 0 then
-          local itemName, itemLink, _, _, _, _, _, _, _, itemIcon = GetItemInfo(6948)
-          return self:ChangeAction("/use " .. itemName)
-
-     -- Astral Recall
-     elseif IsPlayerSpell(556) and GetSpellCooldown(556) == 0 then
-          local spellName, _, spellIcon = GetSpellInfo(556)
-          return self:ChangeAction("/cast " .. spellName)
-
-	 -- Forbs
-	elseif IsPlayerSpell(307810) and GetSpellCooldown(307810) == 0 then
-		local spellName, _, spellIcon = GetSpellInfo(307810)
-		return self:ChangeAction("/cast " .. spellName)
-     end
-end)
-
-local function hsHover()
-	GameTooltip:SetOwner(teleportFrame, cfg.tooltipPos)
-	GameTooltip:AddLine(cfg.TooltipTitleText("Heartstone"))
-	GameTooltip:AddLine(" ")
-	HSIcon:SetVertexColor(unpack(cfg.color.hover))
-
-	for i = 1, #hsList.spell do
-		local spellId = hsList.spell[i]
-		if IsSpellKnown(spellId) then
-			local spellName, _, spellIcon = GetSpellInfo(spellId)
-			local CDremaining = "Ready"
-
-			local startTime, duration = GetSpellCooldown(spellId)
-			if startTime ~= 0 then
-				CDremaining = (startTime+duration)-GetTime()
-				CDremaining = SecondsToTime(CDremaining)
-				-- GameTooltip:AddDoubleLine("Cooldown",CDremaining,1,1,0,1,1,1)
-				
+		if data.type == "spell" then 
+			if IsSpellKnown(data.id) and GetSpellCooldown(data.id) == 0 then
+				local spellName, _, spellIcon = GetSpellInfo(data.id)
+				return self:ChangeAction("/cast " .. spellName)
 			end
-
-			GameTooltip:AddDoubleLine(
-				join(" ",AddTexture(spellIcon and spellIcon or nil), spellName),
-				CDremaining,
-				1, 1, 1,
-				1, 1, 1
-			)
-		end		
-	end
-
-	for i = 1, #hsList.item do
-		local itemId = hsList.item[i]
-		if GetItemCount(itemId) > 0 then
-			local itemName, itemLink, _, _, _, _, _, _, _, itemIcon = GetItemInfo(itemId)
-			local CDremaining = "Ready"
-
-			local startTime, duration = GetItemCooldown(itemId)
-			if startTime ~= 0 then
-				CDremaining = (startTime+duration)-GetTime()
-				CDremaining = SecondsToTime(CDremaining)
-				-- GameTooltip:AddDoubleLine("Cooldown",CDremaining,1,1,0,1,1,1)
-				
+		elseif data.type == "item" then 
+			if IsUsableItem(data.id) and GetItemCount(data.id) > 0 and GetItemCooldown(data.id) == 0 then
+				local itemName, itemLink, _, _, _, _, _, _, _, itemIcon = GetItemInfo(data.id)
+          		return self:ChangeAction("/use " .. itemName)
 			end
-
-			GameTooltip:AddDoubleLine(
-				join(" ",AddTexture(itemIcon and itemIcon or nil), itemName),
-				CDremaining,
-				1, 1, 1,
-				1, 1, 1
-			)
-		end		
-	end
-	GameTooltip:Show()
-end
-
-local function updateTeleportText()
-	local playerLevel = UnitLevel("player")
-	if IsUsableItem(64488) and GetItemCooldown(64488) == 0 
-	or IsUsableItem(6948) and GetItemCooldown(6948) == 0 
-	-- or IsPlayerSpell(556) and GetSpellCooldown(556) == 0
-	then 
-		HSIcon:SetVertexColor(unpack(cfg.color.normal))
-		HSText:SetTextColor(unpack(cfg.color.normal))
-	else
-		HSIcon:SetVertexColor(unpack(cfg.color.inactive))
-		HSText:SetTextColor(unpack(cfg.color.inactive))
-	end
-end
-
-local elapsed = 0
-teleportFrame:SetScript('OnUpdate', function(self, e)
-	elapsed = elapsed + e
-	if elapsed >= 1 then
-		updateTeleportText()
-		if hsOnHover then hsHover() end
-		elapsed = 0
+		end
 	end
 end)
 
@@ -185,8 +210,10 @@ eventframe:RegisterEvent("MODIFIER_STATE_CHANGED")
 
 eventframe:SetScript("OnEvent", function(this, event, arg1, arg2, arg3, arg4, ...)
 	if InCombatLockdown() then return end 
+	
+	updateActiveList()
+	updateHsText()
 
-	HSText:SetText(strupper(GetBindLocation()))
 	HSFrame:SetSize(HSText:GetStringWidth()+16, 16)
 
 	teleportFrame:SetSize(HSFrame:GetWidth()+8, 16)
